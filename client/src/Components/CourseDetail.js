@@ -1,16 +1,13 @@
-import React, { useState, useEffect, useContext } from "react";
-import { NavLink, useHistory, useParams } from "react-router-dom";
-import Context from '../Context'
+import React, { useState, useEffect } from "react";
+import { Link, useHistory, useParams } from "react-router-dom";
 import ReactMarkdown from 'react-markdown';
 
-export default function CourseDetail() {
+export default function CourseDetail({context}) {
     let history = useHistory();
-    const context= useContext(Context);
-    const {authenticateUser} = context;
+    const {authenticateUser} = context; 
     const [course, setCourse] = useState({});
     const [user, setUser] = useState({firstName: '', lastName: ''});
     const { id } = useParams();
-    //is error variable needed here?
 
 //FetchCourse method fetches a single course per id
     useEffect(() => {
@@ -25,45 +22,38 @@ export default function CourseDetail() {
         });
     }, [context.data, id]);
     
-const deleteCourse = (props) =>{
-    const emailAddress = authenticateUser.emailAddress;
-    const password = authenticateUser.clientPassword;
-    context.data.deleteCourse(id, emailAddress, password)
-    .then (
-        console.log('Course has been deleted.'),
-        history.push('')
-    )
+const deleteCourse = async() =>{
+    const emailAddress =  authenticateUser.emailAddress;
+    const password =  authenticateUser.password;
+    await context.data.deleteCourse(id, emailAddress, password);
+        history.push('/')
 }
 //Reminder to edit class->className
 const actionButtons = (
-    <div className="actions--bar">
-      <div className="wrap">
-        {authenticateUser && course.userId === authenticateUser.id ? (
-          <React.Fragment>
-            <NavLink to={`/courses/${id}/update`} className="button">
-              Update Course
-            </NavLink>
-            <NavLink
-              to={`/courses/${course.course.id}/delete`}
-              className="button"
-              onClick={deleteCourse}
-            >
-              Delete Course
-            </NavLink>
-            <NavLink to="/" className="button button-secondary">
-              Return to List
-            </NavLink>
-          </React.Fragment>
-        ) : (
-          <React.Fragment>
-            <NavLink className="button button-secondary" to="/">
-              Return to List
-            </NavLink>
-          </React.Fragment>
-        )}
-      </div>
+  <div className="actions--bar">
+    <div className="wrap">
+      {authenticateUser && course.userId === authenticateUser.id ? (
+        <React.Fragment>
+          <Link className="button" to={`/courses/${id}/update`}>
+            Update Course
+          </Link>
+          <button className="button" onClick={deleteCourse}>
+            Delete Course
+          </button>
+          <Link to="/" className="button button-secondary">
+            Return to List
+          </Link>
+        </React.Fragment>
+      ) : (
+        <React.Fragment>
+          <Link className="button button-secondary" to="/">
+            Return to List
+          </Link>
+        </React.Fragment>
+      )}
     </div>
-    );
+  </div>
+);
 
 const courseDetail=(
     <div className="wrap">
@@ -72,7 +62,7 @@ const courseDetail=(
         <div className="main--flex">
           <div>
             <h3 className="course--detail--title">Course</h3>
-            <h4 className="course--name">{course.title}</h4>
+            <h4 className="course--name">{course?.title}</h4>
             <p>{`${user.firstName} ${user.lastName}`}</p>
             <ReactMarkdown>
               {`${course.description}`}
@@ -98,6 +88,3 @@ return (
     </main>
 );
 };
-
-
-// authenticateUser or authenticatedUser?

@@ -1,6 +1,7 @@
+//From unit 10 Authentication course
 import React from "react";
 
-export default (props) => {
+ const Form = (props) => {
   const { cancel, errors, submit, submitButtonText, elements } = props;
 
   function handleSubmit(event) {
@@ -51,3 +52,4 @@ function ErrorsDisplay({ errors }) {
 
   return errorsDisplay;
 }
+export default Form;

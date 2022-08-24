@@ -1,3 +1,4 @@
+//From Unit 10 authentication course.
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import Form from "./Form";
@@ -66,7 +67,7 @@ export default class UserSignIn extends Component {
   submit = () => {
     const { context } = this.props;
     const { from } = this.props.location.state || {
-      from: { pathname: "/authenticated" },
+      from: { pathname: "/" },
     };
     const { username, password } = this.state;
 

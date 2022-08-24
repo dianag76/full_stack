@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+//handles Header link change depending if User is signed in or not.
 
 export default class Header extends React.PureComponent {
   render() {

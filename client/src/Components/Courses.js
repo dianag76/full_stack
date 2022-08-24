@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 
 const Courses = ({ context }) => {
   const [courses, setCourses] = useState([]);
-  console.log(context)
 
+//call fetchCourses method from Data.js
   useEffect(() => {
     context.data
-      .getCourses()
+      .fetchCourses()
       .then((data) => setCourses(data))
       .catch((err) => console.log(err));
     // eslint-disable-next-line react-hooks/exhaustive-deps

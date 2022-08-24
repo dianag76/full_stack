@@ -20,7 +20,7 @@
                 msg: "First name is required",
               },
               notEmpty: {
-                msg: "Please provide a name",
+                msg: "Please provide a first name",
               },
             },
           },
@@ -30,6 +30,9 @@
             validate: {
               notNull: {
                 msg: "Last name is required",
+              },
+              notEmpty: {
+                msg: "Please provide a last name",
               },
             },
           },

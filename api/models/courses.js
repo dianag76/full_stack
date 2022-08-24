@@ -30,25 +30,9 @@ const { sequelize } = require('.');
                     },
                   },
                 },
-                estimatedTime: {
-                  type: Sequelize.STRING,
-                  allowNull: true,
-                  validate: {
-                    notEmpty: {
-                      msg: "Please provide a value for time",
-                    },
-                  },
-                },
-                materialsNeeded: {
-                  type: Sequelize.STRING,
-                  allowNull: true,
-                  validate: {
-                    notEmpty: {
-                      msg: "Please provide a value for materials needed",
-                    },
-                  },
-                },
-              },
+                estimatedTime:Sequelize.STRING,
+                materialsNeeded:Sequelize.STRING,
+            },
               { sequelize }
             );
 

@@ -1,106 +1,94 @@
-import React, { useState, useContext } from "react";
+import { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
-import Form from "./Form";
-import Context from '../Context'
 
-export default function UserSignUp() {
-  const context = useContext(Context); //why didn't Context.Context work?
-  let history = useHistory();
- 
- const [name, setName] = useState('');
- const [username, setUser] = useState('');
- const [password, setPass] = useState('');
- const [errors, setErrors] = useState([]);
+//Handles users sign up form. 
+const UserSignUp = ({ context }) => {
+  const [errors, setErrors] = useState([]);
+  const [user, setUser] = useState({
+    firstName: "",
+    lastName: "",
+    emailAddress: "",
+    password: "",
+  });
 
- const change = (event) => {
-    const value = event.target.value;
-    switch (event.target.name){
-      case "name":
-        setName(value);
-        break;
-      case "username":
-        setUser(value);
-        break;
-      case "password":
-        setPass(value);
-        break;
-      default:
-        return;
-    }
+  const history = useHistory();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUser((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+//Calls the createUser method in Data.js and passes user state to it. 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    context.data.createUser(user).then((message) => {
+      if (message.length) {
+        setErrors(message);
+      } else {
+        context.actions.signIn(user.emailAddress, user.password);
+        history.push("/");
+      }
+    });
   };
 
-  const submit = () => {
-    
-    // Create user
-    const user = {
-      name,
-      username,
-      password,
-    };
-
-    context.data
-      .createUser(user)
-      .then((errors) => {
-        if (errors.length) {
-          setErrors(errors)
-        } else {
-          context.actions.signIn(username, password).then(() => {
-            history.push("/authenticated");
-          });
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        history.push("/error");
-      });
-  };
-
- const cancel = () => {
-    history.push("/");
-  };
-    return (
+  return (
+    <main>
       <div className="form--centered">
-        <div className="grid-33 centered signin">
-          <h1>Sign Up</h1>
-          <Form
-            cancel={cancel}
-            errors={errors}
-            submit={submit}
-            submitButtonText="Sign Up"
-            elements={() => (
-              <React.Fragment>
-                <input
-                  id="name"
-                  name="name"
-                  type="text"
-                  value={name}
-                  onChange={change}
-                  placeholder="Name"
-                />
-                <input
-                  id="username"
-                  name="username"
-                  type="text"
-                  value={username}
-                  onChange={change}
-                  placeholder="User Name"
-                />
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  value={password}
-                  onChange={change}
-                  placeholder="Password"
-                />
-              </React.Fragment>
-            )}
+        <h2>Sign Up</h2>
+        {errors && errors.length ? (
+          <div className="validation--errors">
+            <h3>Validation Errors</h3>
+            <ul>
+              {errors.map((error, index) => (
+                <li key={index}>{error}</li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+        <form onSubmit={handleSubmit}>
+          <label htmlFor="firstName">First Name</label>
+          <input
+            id="firstName"
+            name="firstName"
+            type="text"
+            onChange={handleChange}
           />
-          <p>
-            Already have a user account? <Link to="/signin">Click here</Link> to
-            sign in!
-          </p>
-        </div>
+          <label htmlFor="lastName">Last Name</label>
+          <input
+            id="lastName"
+            name="lastName"
+            type="text"
+            onChange={handleChange}
+          />
+          <label htmlFor="emailAddress">Email Address</label>
+          <input
+            id="emailAddress"
+            name="emailAddress"
+            type="email"
+            onChange={handleChange}
+          />
+          <label htmlFor="password">Password</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            onChange={handleChange}
+          />
+          <button className="button" type="submit">
+            Sign Up
+          </button>
+          <Link className="button button-secondary" to="/">
+            Cancel
+          </Link>
+        </form>
+        <p>
+          Already have a user account? Click here to{" "}
+          <Link to="/signin">sign in</Link>!
+        </p>
       </div>
-    )
-  };
+    </main>
+  );
+};
+export default UserSignUp;
