@@ -1,24 +1,31 @@
 'use strict';
-
-// load modules
+//cors 
+const cors = require("cors");
 const express = require('express');
 const morgan = require('morgan');
+const routes = require("./routes");
 const Sequelize = require("./models/index.js").sequelize;
-// variable to enable global error logging
-const enableGlobalErrorLogging = process.env.ENABLE_GLOBAL_ERROR_LOGGING === 'true';
+
 
 // create the Express app
 const app = express();
-app.use(express.json());
- const routes = require("./routes");
-//importing router from routes moduke in this file 
-app.use('/api',routes);
 
+// Enable All CORS Requests
+app.use(cors());
+
+//Setup request body JSON parsing
+app.use(express.json());
 
 // setup morgan which gives us http request logging
 app.use(morgan('dev'));
 
-//Sequelize authenticate function to test database connection
+// variable to enable global error logging
+const enableGlobalErrorLogging = process.env.ENABLE_GLOBAL_ERROR_LOGGING === 'true';
+
+ 
+//importing router from routes module in this file 
+app.use('/api',routes);
+
 
 
 // setup a friendly greeting for the root route
